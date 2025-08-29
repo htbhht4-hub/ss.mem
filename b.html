@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>میم کوین‌ها</title>
+<style>
+body { font-family: Arial, sans-serif; background: #111; color: #eee; margin:0; padding:0; text-align: center; }
+h1 { margin-top: 20px; }
+table { margin: 20px auto; border-collapse: collapse; width: 90%; background: #222; color: #eee; }
+th, td { border: 1px solid #444; padding: 8px; }
+th { background: #333; }
+tr:nth-child(even) { background: #2a2a2a; }
+tr:hover { background: #444; }
+a { color: #1e90ff; text-decoration: none; }
+</style>
+</head>
+<body>
+<h1>📈 لیست میم کوین‌ها</h1>
+<table>
+  <thead>
+    <tr>
+      <th>نام</th>
+      <th>نماد</th>
+      <th>قیمت (USD)</th>
+      <th>حجم 24h</th>
+      <th>صرافی‌ها</th>
+    </tr>
+  </thead>
+  <tbody id="coin-table">
+    <tr><td colspan="5">در حال بارگذاری...</td></tr>
+  </tbody>
+</table>
+
+<script>
+async function loadCoins() {
+  try {
+    const res = await fetch("coins.json");
+    const coins = await res.json();
+
+    const table = document.getElementById("coin-table");
+    table.innerHTML = "";
+
+    coins.forEach(c => {
+      const exchanges = `<a href="https://www.coingecko.com/en/coins/${c.id}#markets" target="_blank">مشاهده</a>`;
+      const row = `
+        <tr>
+          <td>${c.name}</td>
+          <td>${c.symbol.toUpperCase()}</td>
+          <td>$${c.current_price.toLocaleString()}</td>
+          <td>$${c.total_volume.toLocaleString()}</td>
+          <td>${exchanges}</td>
+        </tr>
+      `;
+      table.innerHTML += row;
+    });
+
+  } catch(err) {
+    console.error("خطا در بارگذاری:", err);
+    document.getElementById("coin-table").innerHTML = `<tr><td colspan="5">خطا در دریافت داده‌ها.</td></tr>`;
+  }
+}
+
+loadCoins();
+</script>
+</body>
+</html>
